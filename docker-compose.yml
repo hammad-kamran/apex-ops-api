@@ -1,0 +1,71 @@
+name: apex-ops
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: apex_ops
+      POSTGRES_USER: apex
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes:
+      - db-data:/var/lib/postgresql/data   # persistent storage survives redeploys and rollbacks
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U apex -d apex_ops"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [backend]                    # not published to the host
+    restart: unless-stopped
+
+  api:
+    image: ${API_IMAGE:-apex-ops-api}:${IMAGE_TAG:-local}
+    build:
+      context: .
+      args:
+        APP_VERSION: ${IMAGE_TAG:-local}
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: apex_ops
+      DB_USER: apex
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000" # localhost only
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2).status == 200 else 1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    networks: [backend]
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    profiles: [monitoring]                 # optional: docker compose --profile monitoring up -d
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+    networks: [backend]
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt        # generated locally, git-ignored
+
+volumes:
+  db-data:
+
+networks:
+  backend:

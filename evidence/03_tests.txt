@@ -1,0 +1,29 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-8.3.5, pluggy-1.7.0 -- /home/raziel/apex-ops-api/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/raziel/apex-ops-api
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.14.0
+collecting ... collected 16 items
+
+tests/test_api.py::test_liveness_returns_ok PASSED                       [  6%]
+tests/test_api.py::test_readiness_ok_when_database_up PASSED             [ 12%]
+tests/test_api.py::test_readiness_fails_when_database_down PASSED        [ 18%]
+tests/test_api.py::test_create_and_get_task PASSED                       [ 25%]
+tests/test_api.py::test_create_task_rejects_invalid_title[payload0] PASSED [ 31%]
+tests/test_api.py::test_create_task_rejects_invalid_title[payload1] PASSED [ 37%]
+tests/test_api.py::test_create_task_rejects_invalid_title[payload2] PASSED [ 43%]
+tests/test_api.py::test_create_task_rejects_invalid_title[payload3] PASSED [ 50%]
+tests/test_api.py::test_create_task_rejects_invalid_title[payload4] PASSED [ 56%]
+tests/test_api.py::test_update_status_valid_and_invalid PASSED           [ 62%]
+tests/test_api.py::test_metrics_exposed PASSED                           [ 68%]
+tests/test_api.py::test_version_endpoint PASSED                          [ 75%]
+tests/test_api.py::test_structured_logs_are_json_and_redacted PASSED     [ 81%]
+tests/test_api.py::test_secret_read_from_file PASSED                     [ 87%]
+tests/test_api.py::test_request_id_header_propagated PASSED              [ 93%]
+tests/test_api.py::test_intentional_failure_blocks_release SKIPPED (...) [100%]
+
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_api.py:102: intentional failure demo is disabled
+======================== 15 passed, 1 skipped in 0.09s =========================

@@ -1,0 +1,265 @@
+
+================ 1. Deploy v1.0.0 ================
+secrets/db_password.txt already exists, keeping it.
+[deploy] current: none -> target: 1.0.0
+ Container apex-ops-db-1 Running 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-api-1 Running 
+ Container apex-ops-db-1 Running 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+[smoke] waiting for readiness at http://127.0.0.1:8000/health/ready
+[smoke] ready after 1 attempt(s)
+[smoke] version OK: 1.0.0
+[smoke] write/read OK (task 3)
+[smoke] metrics OK
+[smoke] PASS
+[deploy] SUCCESS: 1.0.0 is live and recorded in .deploy/history
+
+================ 2. Deploy v1.1.0 ================
+secrets/db_password.txt already exists, keeping it.
+[deploy] building apex-ops-api:1.1.0 locally
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.26kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 1.0s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 resolve docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e 0.0s done
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/python:3.12-slim
+#4 DONE 0.8s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 123B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 715B done
+#6 DONE 0.0s
+
+#7 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#7 resolve docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159 0.0s done
+#7 CACHED
+
+#8 [builder 3/4] COPY requirements.txt .
+#8 CACHED
+
+#9 [builder 2/4] WORKDIR /build
+#9 CACHED
+
+#10 [builder 4/4] RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+#10 CACHED
+
+#11 [stage-1 2/6] RUN groupadd --system --gid 10001 app  && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
+#11 0.336 useradd warning: app's uid 10001 is greater than SYS_UID_MAX 999
+#11 DONE 0.4s
+
+#12 [stage-1 3/6] WORKDIR /app
+#12 DONE 0.1s
+
+#13 [stage-1 4/6] COPY --from=builder /install /usr/local
+#13 DONE 0.3s
+
+#14 [stage-1 5/6] COPY app ./app
+#14 DONE 0.1s
+
+#15 [stage-1 6/6] COPY wsgi.py gunicorn.conf.py ./
+#15 DONE 0.1s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 1.3s done
+#16 exporting manifest sha256:78376b164085659b9199443dcfe019fbe809faa66eaaa480ab115630322e4e27 0.0s done
+#16 exporting config sha256:7c8e3fa631fc7aab6cf79c5092b7635de7e83a37a4071465a4c6c82dfdbbea2f 0.0s done
+#16 exporting attestation manifest sha256:07a1defdbf05594227c665f14ae0a843243d5dc7b65ce17f839bcc832dd30d62 0.0s done
+#16 exporting manifest list sha256:8d0760aae0070cf824ff27b852cae298afedce4827ff1abfd48afc6867079880
+#16 exporting manifest list sha256:8d0760aae0070cf824ff27b852cae298afedce4827ff1abfd48afc6867079880 0.0s done
+#16 naming to docker.io/library/apex-ops-api:1.1.0 done
+#16 unpacking to docker.io/library/apex-ops-api:1.1.0
+#16 unpacking to docker.io/library/apex-ops-api:1.1.0 0.4s done
+#16 DONE 2.0s
+[deploy] current: 1.0.0 -> target: 1.1.0
+ Container apex-ops-db-1 Running 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-db-1 Running 
+ Container apex-ops-api-1 Recreate 
+ Container apex-ops-api-1 Recreated 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-api-1 Starting 
+ Container apex-ops-api-1 Started 
+[smoke] waiting for readiness at http://127.0.0.1:8000/health/ready
+[smoke] ready after 2 attempt(s)
+[smoke] version OK: 1.1.0
+[smoke] write/read OK (task 4)
+[smoke] metrics OK
+[smoke] PASS
+[deploy] SUCCESS: 1.1.0 is live and recorded in .deploy/history
+
+================ 3. Build a deliberately broken v1.2.0 (readiness always fails) ================
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.26kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.5s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 resolve docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e 0.0s done
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/python:3.12-slim
+#4 DONE 0.4s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 123B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 715B done
+#6 DONE 0.0s
+
+#7 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#7 resolve docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159 0.0s done
+#7 DONE 0.0s
+
+#7 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#7 CACHED
+
+#8 [builder 2/4] WORKDIR /build
+#8 CACHED
+
+#9 [builder 3/4] COPY requirements.txt .
+#9 CACHED
+
+#10 [builder 4/4] RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+#10 CACHED
+
+#11 [stage-1 2/6] RUN groupadd --system --gid 10001 app  && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
+#11 0.325 useradd warning: app's uid 10001 is greater than SYS_UID_MAX 999
+#11 DONE 0.4s
+
+#12 [stage-1 3/6] WORKDIR /app
+#12 DONE 0.1s
+
+#13 [stage-1 4/6] COPY --from=builder /install /usr/local
+#13 DONE 0.3s
+
+#14 [stage-1 5/6] COPY app ./app
+#14 DONE 0.1s
+
+#15 [stage-1 6/6] COPY wsgi.py gunicorn.conf.py ./
+#15 DONE 0.1s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 1.2s done
+#16 exporting manifest sha256:a223be6177bb322edc4672eda5426c1bfe9ab770d5dd32dade34b51cb660f882 0.0s done
+#16 exporting config sha256:b2802c856b16a9d190b5d6467c51bf59e9861a8a38a7023536c54ed7b565c572 0.0s done
+#16 exporting attestation manifest sha256:416773d57c7e0cc8027d8a00ae09a3bbd49de3120d9630d1ea4c8a3e219f6cc9 0.0s done
+#16 exporting manifest list sha256:62503067a717759ede5df7a1d35c04935ea5097ff4604899015bd1b80a184d04
+#16 exporting manifest list sha256:62503067a717759ede5df7a1d35c04935ea5097ff4604899015bd1b80a184d04 0.0s done
+#16 naming to docker.io/library/apex-ops-api:1.2.0 done
+#16 unpacking to docker.io/library/apex-ops-api:1.2.0
+#16 unpacking to docker.io/library/apex-ops-api:1.2.0 0.4s done
+#16 DONE 1.8s
+secrets/db_password.txt already exists, keeping it.
+[deploy] current: 1.1.0 -> target: 1.2.0
+ Container apex-ops-db-1 Running 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-db-1 Running 
+ Container apex-ops-api-1 Recreate 
+ Container apex-ops-api-1 Recreated 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-api-1 Starting 
+ Container apex-ops-api-1 Started 
+[smoke] waiting for readiness at http://127.0.0.1:8000/health/ready
+[smoke] FAIL: service never became ready
+{"checks":{"fault_injection":"enabled"},"status":"unavailable"}
+[deploy] verification FAILED for 1.2.0
+api-1  | {"ts": "2026-10-29T09:22:51.425646+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "1a8015d0e572434dbddc14b308da55a8", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.06}
+api-1  | {"ts": "2026-10-29T09:22:53.450995+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "6ef12d894b03455cb0b2af51f9170e69", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.12}
+api-1  | {"ts": "2026-10-29T09:22:55.523020+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "ed52a5286eab4eb286d081045ac6dad7", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 29.45}
+api-1  | {"ts": "2026-10-29T09:22:57.578823+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "cfaec6f10e494efd88d0d8271546d0a9", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 21.75}
+api-1  | {"ts": "2026-10-29T09:22:59.605786+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "bade9b2c41b4416390a02995503a1f1f", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.02}
+api-1  | {"ts": "2026-10-29T09:23:01.593749+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "e96e4d9ae8fc412cb958eaa82db3bb66", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.81}
+api-1  | {"ts": "2026-10-29T09:23:01.635109+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "afdd26ee7fd24ecf870eaaf78c4ecfb8", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.96}
+api-1  | {"ts": "2026-10-29T09:23:03.661925+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "eda4bd29b4b048bab09d497819c0137c", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.78}
+api-1  | {"ts": "2026-10-29T09:23:05.731678+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "6f2eb07ad3444f9d98c8da49cf8ce80c", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 24.42}
+api-1  | {"ts": "2026-10-29T09:23:07.762800+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "5a25acca9ed442b682800775e22eb8e1", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 13.44}
+api-1  | {"ts": "2026-10-29T09:23:09.815618+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "5734d650471f4735af6e09b767d78486", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 21.28}
+api-1  | {"ts": "2026-10-29T09:23:11.844970+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "cb2b560f2c204425bde273879db62cc7", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.02}
+api-1  | {"ts": "2026-10-29T09:23:11.945322+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "524ee0ee720540e78f9ac0cac9751886", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.86}
+api-1  | {"ts": "2026-10-29T09:23:13.873205+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "abc14797a9464e2f89887c8ad5f21166", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 15.08}
+api-1  | {"ts": "2026-10-29T09:23:15.908018+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "73f85a28206046fdb5bd725b40ad2449", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.45}
+api-1  | {"ts": "2026-10-29T09:23:17.933883+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "e5361606b2c64f1382d85489c21f0004", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.28}
+api-1  | {"ts": "2026-10-29T09:23:19.959128+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "137b35d19af8492c91301b333ea714f7", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.41}
+api-1  | {"ts": "2026-10-29T09:23:22.006597+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "012d9705f534496aa7aa7f8c3ac5f5c8", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 19.48}
+api-1  | {"ts": "2026-10-29T09:23:22.290299+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "5db1bf7931e54021a3f63e50945d8b4c", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.51}
+api-1  | {"ts": "2026-10-29T09:23:24.039979+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "c994e1fb083241e6abc099b877bc1f02", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 16.38}
+api-1  | {"ts": "2026-10-29T09:23:26.068438+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "f491a11e790f4a939ca1baba9b90b77b", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 12.9}
+api-1  | {"ts": "2026-10-29T09:23:28.110505+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "2981ca44c97c4219be39704f04035469", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 20.56}
+api-1  | {"ts": "2026-10-29T09:23:30.185100+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "a3882fe3eb6d447d86d8f8b2dd96de05", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 42.31}
+api-1  | {"ts": "2026-10-29T09:23:32.221595+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "60869985a5a94191a349764ac8c0126a", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 14.64}
+api-1  | {"ts": "2026-10-29T09:23:32.632763+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "9d4d3c5d06d442d5bea654384c3579b8", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.47}
+api-1  | {"ts": "2026-10-29T09:23:34.250374+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "10c61ae5de0749f0993728db703cf9b9", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 13.59}
+api-1  | {"ts": "2026-10-29T09:23:36.280307+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "a1906751b5214516ad81a3240da2102a", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 13.49}
+api-1  | {"ts": "2026-10-29T09:23:38.306016+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "db21cdf827ce4dc3b2b31c6f136a3013", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.98}
+api-1  | {"ts": "2026-10-29T09:23:40.331156+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "4348a40566fc4b18b4082db173d42fcd", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.5}
+api-1  | {"ts": "2026-10-29T09:23:40.353215+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "b76fe5115f79428daca1a51b18fc9bfb", "method": "GET", "path": "/health/ready", "status": 503, "duration_ms": 11.56}
+[deploy] automatic rollback to last known-good version 1.1.0
+ Container apex-ops-db-1 Running 
+ Container apex-ops-api-1 Recreate 
+ Container apex-ops-api-1 Recreated 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-api-1 Starting 
+ Container apex-ops-api-1 Started 
+[smoke] waiting for readiness at http://127.0.0.1:8000/health/ready
+[smoke] ready after 2 attempt(s)
+[smoke] version OK: 1.1.0
+[smoke] write/read OK (task 5)
+[smoke] metrics OK
+[smoke] PASS
+[deploy] rolled back to 1.1.0
+>>> deploy of 1.2.0 failed as expected and was rolled back automatically
+{"version":"1.1.0"}
+
+
+================ 4. Manual rollback 1.1.0 -> 1.0.0 ================
+[rollback] 1.1.0 -> 1.0.0
+ Container apex-ops-db-1 Running 
+ Container apex-ops-api-1 Recreate 
+ Container apex-ops-api-1 Recreated 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-api-1 Starting 
+ Container apex-ops-api-1 Started 
+[smoke] waiting for readiness at http://127.0.0.1:8000/health/ready
+[smoke] ready after 2 attempt(s)
+[smoke] version OK: 1.0.0
+[smoke] write/read OK (task 6)
+[smoke] metrics OK
+[smoke] PASS
+[rollback] SUCCESS: 1.0.0 is live (database volume untouched)
+{"version":"1.0.0"}
+
+
+================ 5. Data persisted across all releases ================
+{"tasks":[{"created_at":"2026-10-29T09:19:42.704155+00:00","id":1,"status":"open","title":"smoke test task"},{"created_at":"2026-10-29T09:20:38.116700+00:00","id":2,"status":"open","title":"Check backups"},{"created_at":"2026-10-29T09:22:21.863310+00:00","id":3,"status":"open","title":"smoke test task"},{"created_at":"2026-10-29T09:22:33.486426+00:00","id":4,"status":"open","title":"smoke test task"},{"created_at":"2026-10-29T09:23:44.993818+00:00","id":5,"status":"open","title":"smoke test task"},{"created_at":"2026-10-29T09:23:49.656218+00:00","id":6,"status":"open","title":"smoke test task"}]}
+
+
+================ Release history ================
+1.0.0

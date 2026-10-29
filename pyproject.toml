@@ -1,0 +1,15 @@
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "S", "UP"]
+ignore = ["S101", "S104"]  # asserts are fine in tests; binding 0.0.0.0 is required inside a container
+
+[tool.ruff.lint.per-file-ignores]
+"app/db.py" = ["S608"]     # table DDL uses a fixed internal string, never user input
+"tests/*" = ["S105", "S106"]  # fake secret values used to test redaction
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      demo_failure:
+        description: "Enable the intentional failing test to prove the release is blocked"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint, test and audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Dependency vulnerability audit (pip-audit)
+        run: pip-audit -r requirements.txt
+      - name: Unit tests (pytest)
+        env:
+          DEMO_FAIL: ${{ inputs.demo_failure && '1' || '0' }}
+        run: |
+          mkdir -p reports
+          pytest -v --junitxml=reports/junit.xml
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: reports/junit.xml
+
+  dockerfile-lint:
+    name: Dockerfile lint (hadolint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+  build-scan-deploy:
+    name: Build, scan and deploy (compose smoke test)
+    needs: [test, dockerfile-lint]   # any failing test or lint blocks everything below
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute version tag
+        id: meta
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="sha-${GITHUB_SHA::7}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Build image
+        run: docker build --build-arg APP_VERSION=${{ steps.meta.outputs.version }} -t apex-ops-api:${{ steps.meta.outputs.version }} .
+
+      - name: Verify container runs as non-root
+        run: |
+          user=$(docker image inspect apex-ops-api:${{ steps.meta.outputs.version }} --format '{{.Config.User}}')
+          echo "Configured user: $user"
+          [[ -n "$user" && "$user" != "root" && "$user" != "0" ]]
+
+      - name: Image vulnerability scan (Trivy)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: apex-ops-api:${{ steps.meta.outputs.version }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+
+      - name: Deploy with Docker Compose and run smoke tests
+        run: ./scripts/deploy.sh ${{ steps.meta.outputs.version }}
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --tail=100
+
+      - name: Publish versioned image to GHCR (main branch and tags only)
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker tag apex-ops-api:${{ steps.meta.outputs.version }} ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
+          docker push ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

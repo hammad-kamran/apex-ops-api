@@ -1,0 +1,39 @@
+# Alert proposal. Thresholds are starting points to tune against real traffic.
+groups:
+  - name: apex-ops-api
+    rules:
+      - alert: ApexApiDown
+        expr: up{job="apex-ops-api"} == 0
+        for: 2m
+        labels: {severity: critical}
+        annotations:
+          summary: "API is not being scraped (container down or unreachable)"
+          runbook: "docs/RUNBOOK.md#incident-api-down"
+
+      - alert: ApexDatabaseDown
+        expr: apex_db_up == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: "Readiness check cannot reach PostgreSQL"
+          runbook: "docs/RUNBOOK.md#incident-database-unreachable"
+
+      - alert: ApexHighErrorRate
+        expr: |
+          sum(rate(apex_http_requests_total{status=~"5.."}[5m]))
+            / clamp_min(sum(rate(apex_http_requests_total[5m])), 1e-9) > 0.05
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "More than 5% of requests are failing with 5xx"
+          runbook: "docs/RUNBOOK.md#incident-high-error-rate"
+
+      - alert: ApexHighLatency
+        expr: |
+          sum(rate(apex_http_request_duration_seconds_sum{path=~"/api/.*"}[5m]))
+            / clamp_min(sum(rate(apex_http_request_duration_seconds_count{path=~"/api/.*"}[5m])), 1e-9) > 0.5
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: "Average API latency above 500 ms"
+          runbook: "docs/RUNBOOK.md#troubleshooting"

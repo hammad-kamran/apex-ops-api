@@ -1,0 +1,49 @@
+{"checks":{"database":"up"},"status":"ready"}
+
+# HELP apex_app_info Application build information.
+# TYPE apex_app_info gauge
+apex_app_info{version="1.0.0"} 1
+# HELP apex_db_up Whether the last database check succeeded (1) or failed (0).
+# TYPE apex_db_up gauge
+apex_db_up 1
+# HELP apex_http_requests_total Total HTTP requests.
+# TYPE apex_http_requests_total counter
+apex_http_requests_total{method="GET",path="/api/v1/tasks",status="200"} 1
+apex_http_requests_total{method="GET",path="/api/v1/tasks",status="503"} 1
+apex_http_requests_total{method="GET",path="/api/v1/tasks/<int:task_id>",status="200"} 1
+apex_http_requests_total{method="GET",path="/api/v1/version",status="200"} 2
+apex_http_requests_total{method="GET",path="/health/live",status="200"} 1
+apex_http_requests_total{method="GET",path="/health/ready",status="200"} 29
+apex_http_requests_total{method="GET",path="/health/ready",status="503"} 2
+apex_http_requests_total{method="GET",path="/metrics",status="200"} 4
+apex_http_requests_total{method="POST",path="/api/v1/tasks",status="201"} 1
+# HELP apex_http_request_duration_seconds Request latency summary.
+# TYPE apex_http_request_duration_seconds summary
+apex_http_request_duration_seconds_sum{path="/api/v1/tasks"} 4.033184
+apex_http_request_duration_seconds_count{path="/api/v1/tasks"} 3
+apex_http_request_duration_seconds_sum{path="/api/v1/tasks/<int:task_id>"} 0.013558
+apex_http_request_duration_seconds_count{path="/api/v1/tasks/<int:task_id>"} 1
+apex_http_request_duration_seconds_sum{path="/api/v1/version"} 0.000341
+apex_http_request_duration_seconds_count{path="/api/v1/version"} 2
+apex_http_request_duration_seconds_sum{path="/health/live"} 0.000193
+apex_http_request_duration_seconds_count{path="/health/live"} 1
+apex_http_request_duration_seconds_sum{path="/health/ready"} 7.864957
+apex_http_request_duration_seconds_count{path="/health/ready"} 31
+apex_http_request_duration_seconds_sum{path="/metrics"} 0.000591
+apex_http_request_duration_seconds_count{path="/metrics"} 4
+
+api-1  | {"ts": "2026-10-29T09:25:59.437163+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "82bf0426cc0d40209385bec9d1a41c90", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.28}
+api-1  | {"ts": "2026-10-29T09:26:09.767694+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "d0beb79d68ab4d8fa9e67327febef196", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.07}
+api-1  | {"ts": "2026-10-29T09:26:20.108223+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "088c989dac6744acbf383b973f08dcb5", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 11.48}
+api-1  | {"ts": "2026-10-29T09:26:30.508626+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "b48f929b523e4a6aa37ab752a38bcfbe", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 11.85}
+api-1  | {"ts": "2026-10-29T09:26:40.845627+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "fc3961be1ad44f7cbecb30989c895897", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 11.68}
+api-1  | {"ts": "2026-10-29T09:26:51.204742+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "cf3dbde8831e4925a25548af4c23e388", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 11.76}
+api-1  | {"ts": "2026-10-29T09:27:01.533587+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "aa0ea67fe9254974b484405980cb35a7", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.38}
+api-1  | {"ts": "2026-10-29T09:27:11.876130+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "6bae2b9cc44544319928be147e0b2bc3", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 11.57}
+api-1  | {"ts": "2026-10-29T09:27:22.233198+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "1c15719352cf42cdb8b4fba5efbc96d2", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.5}
+api-1  | {"ts": "2026-10-29T09:27:32.650188+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "27b72b11fa0642ebb71def5eb4aa773a", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 15.01}
+api-1  | {"ts": "2026-10-29T09:27:43.031220+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "ba8071a979df4077904777e9a7d019f2", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.59}
+api-1  | {"ts": "2026-10-29T09:27:53.348055+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "4a7a57e93ad94eada72e6fb412c1993b", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.89}
+api-1  | {"ts": "2026-10-29T09:28:03.740078+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "21f9b40ef914407abbc8f0fa5ac1d958", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.3}
+api-1  | {"ts": "2026-10-29T09:28:14.118800+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "758a153c17344a31b20223cc93032bc9", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 16.23}
+api-1  | {"ts": "2026-10-29T09:28:15.388986+00:00", "level": "INFO", "logger": "apex.api", "message": "request completed", "request_id": "eb3b9cf6cd604a37b28214f6055f4ebd", "method": "GET", "path": "/health/ready", "status": 200, "duration_ms": 12.73}

@@ -1,0 +1,34 @@
+== Baseline ==
+{"checks":{"database":"up"},"status":"ready"}
+
+apex_db_up 1
+
+== Inject failure: stop the database ==
+ Container apex-ops-db-1 Stopping 
+ Container apex-ops-db-1 Stopped 
+
+== Detect: readiness, API and metrics ==
+{"checks":{"database":"down"},"status":"unavailable"}
+  (HTTP 503)
+{"error":"database unavailable","request_id":"a6c2ad6be3154d3289bd8964078642ef"}
+  (HTTP 503)
+{"status":"ok"}
+  (HTTP 200)
+apex_db_up 0
+
+== Diagnose: structured logs (errors only) ==
+{"ts": "2026-10-29T09:25:48.924160+00:00", "level": "ERROR", "logger": "apex.api", "message": "database error", "request_id": "a6c2ad6be3154d3289bd8964078642ef", "error": "connection failed: OperationalError"}
+
+NAME             IMAGE                COMMAND                  SERVICE   CREATED         STATUS                   PORTS
+apex-ops-api-1   apex-ops-api:1.0.0   "gunicorn -c gunicor…"   api       2 minutes ago   Up 2 minutes (healthy)   127.0.0.1:8000->8000/tcp
+
+== Recover: start the database ==
+ Container apex-ops-db-1 Starting 
+ Container apex-ops-db-1 Started 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+{"checks":{"database":"up"},"status":"ready"}
+
+apex_db_up 1
+
+== Drill complete ==
