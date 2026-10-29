@@ -1,15 +1,16 @@
-# Evidence checklist
+# Evidence
 
-Everything here must come from a real run. Replace each item with the actual file.
+All files below come from real runs on 29 Oct 2026 (local WSL2 + Docker Desktop, and GitHub Actions).
 
-| # | Evidence | How to produce | File |
-|---|---|---|---|
-| 1 | Green CI run (all jobs) | Push to `main` on GitHub → Actions tab screenshot | `evidence/01_ci_green.png` |
-| 2 | Blocked release (intentional failure) | Actions → CI → Run workflow → tick `demo_failure` → screenshot showing `test` failed and `build-scan-deploy` skipped | `evidence/02_ci_blocked.png` |
-| 3 | Test results | `pytest -v` output or downloaded `test-report` artifact | `evidence/03_tests.txt` |
-| 4 | Deployment demo | `./scripts/deploy.sh 1.0.0` output + `docker compose ps` | `evidence/04_deploy.png` |
-| 5 | Release + automatic and manual rollback | `./scripts/release_demo.sh` | `evidence/release_demo.log` |
-| 6 | Failure investigation | `./scripts/failure_drill.sh` | `evidence/failure_drill.log` |
-| 7 | Structured logs and metrics | `docker compose logs api` and `curl :8000/metrics` | `evidence/07_logs_metrics.png` |
-| 8 | Non-root + scan results | CI step "Verify container runs as non-root" and Trivy step | `evidence/08_security.png` |
-| 9 | (Optional) Prometheus alerts page | `--profile monitoring`, open :9090/alerts | `evidence/09_prometheus.png` |
+| # | Evidence | File |
+|---|---|---|
+| 1 | Green CI run: lint/test/audit, hadolint, build + non-root check + Trivy + compose deploy + smoke test + GHCR publish | `evidence/01_ci_green.png` |
+| 2 | Blocked release: intentional failing test enabled via "Run workflow", test job failed, build/deploy skipped | `evidence/02_ci_blocked.png` |
+| 3 | Test results (15 passed, 1 intentional-failure test skipped by default) | `evidence/03_tests.txt` |
+| 4 | Local deployment with smoke test PASS and healthy containers | `evidence/04_deploy.log` |
+| 5 | Release 1.0.0 -> 1.1.0, broken 1.2.0 auto-rolled back to 1.1.0, manual rollback to 1.0.0, data preserved | `evidence/release_demo.log` |
+| 6 | Failure investigation: database outage detected, diagnosed and recovered | `evidence/failure_drill.log`, `docs/FAILURE_INVESTIGATION.md` |
+| 7 | Structured JSON logs and Prometheus metrics | `evidence/07_logs_metrics.txt` |
+| 8 | Security gate: pip-audit blocked a real vulnerability (Flask 3.1.1, PYSEC-2026-2151) on the first CI run | `evidence/08_security_gate.png` |
+
+GitHub Actions run history: https://github.com/hammad-kamran/apex-ops-api/actions

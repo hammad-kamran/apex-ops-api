@@ -53,3 +53,8 @@ Cost controls: budgets and alerts on the resource group, scale-to-zero, smallest
 - Proper DB migrations (Alembic) with expand/contract pattern, automated backups and restore test.
 - Integration tests against real PostgreSQL in CI, load test with k6, and Grafana dashboards with Alertmanager routing.
 - OpenTelemetry tracing using the existing request IDs.
+
+## Lessons from running it
+- **The security gates caught real problems.** pip-audit blocked a vulnerable Flask version on the first CI run, before anything was built.
+- **Supply-chain risk in CI is real.** The Trivy action tag I first used had been removed after the March 2026 trivy-action tag-hijacking incident. I moved to the immutable `v0.35.0` release. Next step: pin every third-party action by full commit SHA and let Dependabot propose updates.
+- **Follow-up:** GitHub warns that checkout, setup-python and upload-artifact still target Node.js 20; upgrade them to their current major versions.

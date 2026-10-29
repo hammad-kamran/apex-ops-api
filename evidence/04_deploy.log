@@ -1,0 +1,22 @@
+secrets/db_password.txt already exists, keeping it.
+[deploy] current: 1.0.0 -> target: 1.1.0
+ Container apex-ops-db-1 Running 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-db-1 Running 
+ Container apex-ops-api-1 Recreate 
+ Container apex-ops-api-1 Recreated 
+ Container apex-ops-db-1 Waiting 
+ Container apex-ops-db-1 Healthy 
+ Container apex-ops-api-1 Starting 
+ Container apex-ops-api-1 Started 
+[smoke] waiting for readiness at http://127.0.0.1:8000/health/ready
+[smoke] ready after 2 attempt(s)
+[smoke] version OK: 1.1.0
+[smoke] write/read OK (task 7)
+[smoke] metrics OK
+[smoke] PASS
+[deploy] SUCCESS: 1.1.0 is live and recorded in .deploy/history
+NAME             IMAGE                COMMAND                  SERVICE   CREATED             STATUS                            PORTS
+apex-ops-api-1   apex-ops-api:1.1.0   "gunicorn -c gunicor…"   api       5 seconds ago       Up 2 seconds (health: starting)   127.0.0.1:8000->8000/tcp
+apex-ops-db-1    postgres:16-alpine   "docker-entrypoint.s…"   db        About an hour ago   Up About an hour (healthy)        5432/tcp
